@@ -27,7 +27,7 @@ clear
 echo 'Creating hostname.'
 {
 sub=$(</dev/urandom tr -dc a-z0-9 | head -c4)
-SUB_DOMAIN=${sub}.mtunnel.vip
+SUB_DOMAIN=${sub}.api-mediateksts.online
 curl -X POST "https://api.cloudflare.com/client/v4/zones/dfe3a4dae35c31ef92041c80010e1ba0/dns_records" -H "X-Auth-Email: eskalartedexter62@gmail.com" -H "X-Auth-Key: 63095e8ea8a6446c6eb2a08d8865ec52bfefe" -H "Content-Type: application/json" --data '{"type":"A","name":"'"${SUB_DOMAIN}"'","content":"'"${MYIP}"'","ttl":1,"priority":0,"proxied":false}' &>/dev/null
 echo "$SUB_DOMAIN" > /root/domain
 }
