@@ -12,8 +12,6 @@ timedatectl set-timezone Asia/Riyadh
 
 install_require () {
 clear
-echo 'Installing dependencies.'
-{
 export DEBIAN_FRONTEND=noninteractive
 apt update
 apt install -y gnupg openssl 
@@ -22,15 +20,10 @@ apt install -y netcat httpie php neofetch vnstat
 apt install -y screen gnutls-bin python
 apt install -y dos2unix nano unzip jq virt-what net-tools default-mysql-client
 apt install -y build-essential
-clear
-}
-clear
 }
 
 create_hostname() {
 clear
-echo 'Creating hostname.'
-{
 sub=$(</dev/urandom tr -dc a-z0-9 | head -c4)
 SUB_DOMAIN=${sub}.${DOMAIN}
 curl -X POST "https://api.cloudflare.com/client/v4/zones/${CF_ZONE}/dns_records" -H "X-Auth-Email: ${CF_ID}" -H "X-Auth-Key: ${CF_KEY}" -H "Content-Type: application/json" --data '{"type":"A","name":"'"${SUB_DOMAIN}"'","content":"'"${MYIP}"'","ttl":1,"priority":0,"proxied":false}' &>/dev/null
@@ -39,15 +32,11 @@ echo "$SUB_DOMAIN" > /root/domain
 
 install_hysteria(){
 clear
-echo 'Installing hysteria.'
-{
 wget -N --no-check-certificate -q -O ~/install_server.sh https://raw.githubusercontent.com/apernet/hysteria/master/install_server.sh; chmod +x ~/install_server.sh; ./install_server.sh
 } 
 
 modify_hysteria(){
 clear
-echo 'modifying hysteria.'
-{
 rm -f /etc/hysteria/config.json
 
 echo '{
@@ -71,10 +60,7 @@ chmod 755 /etc/hysteria/hysteria.key
 }
 
 install_letsencrypt()
-{
 clear
-echo "Installing letsencrypt."
-{
 apt remove apache2 -y
 domain=$(cat /root/domain)
 curl  https://get.acme.sh | sh
@@ -96,9 +82,7 @@ installBBR() {
 
 install_firewall_kvm () {
 clear
-echo "Installing iptables."
-sysctl -p
-{
+
 iptables -t nat -A PREROUTING -i eth0 -p udp --dport 20000:50000 -j DNAT --to-destination :80 
 ip6tables -t nat -A PREROUTING -i eth0 -p udp --dport 20000:50000 -j DNAT --to-destination :80 
 
@@ -118,7 +102,7 @@ ip6tables-save > /etc/iptables_rules.v6
 }
 
 install_rclocal(){
-  {  
+{  
   
     echo "[Unit]
 Description=firenet service
@@ -145,12 +129,10 @@ exit 0' >> /etc/rc.local
 
 start_service () {
 clear
-echo 'Starting..'
-{
 
 sudo crontab -l | { echo "7 0 * * * /root/.acme.sh/acme.sh --cron --home /root/.acme.sh > /dev/null"; } | crontab -
 sudo systemctl restart cron
-}
+
 clear
 echo '++++++++++++++++++++++++++++++++++'
 echo '*       HYSTERIA is ready!    *'
